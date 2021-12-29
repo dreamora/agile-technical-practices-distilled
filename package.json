@@ -1,0 +1,22 @@
+{
+    "name": "agile_technical_practices_distilled",
+    "version": "1.0.0",
+    "description": "Training Katas",
+    "main": "src/index.ts",
+    "author": "Marc Schärer",
+    "license": "MIT",
+    "scripts": {
+        "lint": "eslint \"{src,test}/**/*.{js,ts,tsx}\" --fix --color",
+        "clean": "rimraf lib coverage",
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "test": "jest --verbose --coverage",
+        "test:watch": "jest --color --watch"
+    },
+    "devDependencies": {
+        "@types/jest": "27.0.3",
+        "jest": "27.4.5",
+        "ts-jest": "27.1.2",
+        "typescript": "4.5.4"
+    }
+}
