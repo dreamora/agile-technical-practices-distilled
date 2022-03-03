@@ -23,10 +23,6 @@ module.exports = {
         },
     },
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-    moduleNameMapper: {
-        "@qs/magellan-shared": "<rootDir>/packages/shared/src",
-        "@qs/magellan-client": "<rootDir>/packages/client/src",
-    },
     setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
     testRegex: ".*(test|spec)\\.(jsx?|tsx?)$",
     testURL: "http://localhost/",
