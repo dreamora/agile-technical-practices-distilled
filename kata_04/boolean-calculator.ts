@@ -55,20 +55,18 @@ const parseSubExpression = (expression: string): boolean => {
                     return prev;
             }
 
-            throw new Error(`Unknown token ${cur}`);
+            throw new Error(`Unknown token "${cur}"`);
         })
     );
 };
 
 const applyOperation = (op: string, literal: boolean, previousLiteral: string | boolean): boolean => {
-    if (op === "AND") {
-        return literal && parseLiteral(previousLiteral);
-    } else if (op === "OR") {
-        return literal || parseLiteral(previousLiteral);
-    } else if (op === "NOT") {
+    if (op === "NOT") {
         return !literal;
+    } else if (op === "AND") {
+        return literal && parseLiteral(previousLiteral);
     }
-    throw new Error(`Unknown operation ${op}`);
+    throw new Error(`Unknown operation "${op}"`);
 };
 
 function calculateParenthesis(expression: string): string {

@@ -115,4 +115,14 @@ describe("calculateBolean", () => {
 
         expect(actual).toBe(false);
     });
+
+    it('should calculate false w/ "((TRUE AND TRUE) OR (TRUE AND FALSE))"', () => {
+        const actual = calculateBoolean("((TRUE AND TRUE) OR (TRUE AND FALSE))");
+
+        expect(actual).toBe(false);
+    });
+
+    it('should throw error "Unknown token \"UNKNOWN\" for "TRUE UNKNOWN TRUE"', () =>{
+        expect(() => calculateBoolean("TRUE UNKNOWN TRUE")).toThrowError(`Unknown token "UNKNOWN"`);
+    });
 });
