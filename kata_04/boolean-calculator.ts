@@ -14,7 +14,7 @@ const parseLiteral = (literal: string | boolean): boolean => {
 };
 
 const parseExpression = (expression: string): boolean => {
-    return processParenthesis(expression)
+    return calculateParenthesis(expression)
         .split(" OR ")
         .map(cur => parseSubExpression(cur))
         .reduce((prev, cur) => {
@@ -71,21 +71,6 @@ const applyOperation = (op: string, literal: boolean, previousLiteral: string | 
     throw new Error(`Unknown operation ${op}`);
 };
 
-/**
- * Processes an expression and removes all parenthesis
- *
- * @param expression The expression to process
- * @returns The updated expression where parenthesis have been replaced with the resulting boolean.
- */
-function processParenthesis(expression: string): string {
-    Array.from(expression.matchAll(/\(.*\)/g)).forEach(match => {
-        const matchString = match[0];
-        const matchIndex = expression.indexOf(matchString);
-        const matchLength = matchString.length;
-        const subExpression = expression.substring(matchIndex + 1, matchIndex + matchLength - 1);
-        expression =
-            expression.slice(0, matchIndex) + (parseExpression(subExpression) ? "TRUE" : "FALSE") + expression.slice(matchIndex + matchLength);
-    });
-
-    return expression;
+function calculateParenthesis(expression: string): string {
+    return expression.replaceAll(/\(([^()]*)\)/g, match => (parseExpression(match.substring(1, match.length - 1)) ? "TRUE" : "FALSE"));
 }

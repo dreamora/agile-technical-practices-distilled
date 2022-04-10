@@ -110,7 +110,7 @@ describe("calculateBolean", () => {
         expect(actual).toBe(false);
     });
 
-    it('should calculate  w/ "NOT (TRUE AND TRUE)"', () => {
+    it('should calculate false w/ "NOT (TRUE AND TRUE)"', () => {
         const actual = calculateBoolean("NOT (TRUE AND TRUE)");
 
         expect(actual).toBe(false);
