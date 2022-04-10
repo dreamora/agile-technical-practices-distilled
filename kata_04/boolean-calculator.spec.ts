@@ -90,4 +90,29 @@ describe("calculateBolean", () => {
 
         expect(actual).toBe(false);
     });
+
+    // Equivalent to TRUE  OR TRUE OR (TRUE AND FALSE)
+    it('should calculate true w/ "TRUE OR TRUE OR TRUE AND FALSE"', () => {
+        const actual = calculateBoolean("TRUE OR TRUE OR TRUE AND FALSE");
+
+        expect(actual).toBe(true);
+    });
+
+    it('should calculate true w/ "TRUE OR FALSE AND NOT FALSE"', () => {
+        const actual = calculateBoolean("TRUE OR FALSE AND NOT FALSE");
+
+        expect(actual).toBe(true);
+    });
+
+    it('should calculate false w/ "(TRUE OR TRUE OR TRUE) AND FALSE"', () => {
+        const actual = calculateBoolean("(TRUE OR TRUE OR TRUE) AND FALSE");
+
+        expect(actual).toBe(false);
+    });
+
+    it('should calculate  w/ "NOT (TRUE AND TRUE)"', () => {
+        const actual = calculateBoolean("NOT (TRUE AND TRUE)");
+
+        expect(actual).toBe(false);
+    });
 });

@@ -17,15 +17,20 @@ const parseLiteral = (literal: string | boolean): boolean => {
 };
 
 const parseExpression = (expression: string): boolean => {
-    const tokens: Token[] = expression.split(" ");
+    expression = processParenthesis(expression);
+    return expression
+        .split(" OR ")
+        .map(cur => parseSubExpression(cur))
+        .reduce((prev, cur) => {
+            return prev || cur;
+        });
+};
 
+const parseSubExpression = (expression: string): boolean => {
+    const tokens: Token[] = expression.split(" ");
     let currentOp = "";
     return parseLiteral(
         tokens.reduce((prev: Token, cur: Token) => {
-            if (typeof cur !== "string") {
-                return prev;
-            }
-
             if (prev === "NOT") {
                 currentOp = "NOT";
             }
@@ -52,18 +57,9 @@ const parseExpression = (expression: string): boolean => {
                 case "AND":
                     currentOp = "AND";
                     return prev;
-                case "OR":
-                    currentOp = "OR";
-                    return prev;
-                case ")":
-                    currentOp = "";
-                    return prev;
-                case "(":
-                    currentOp = "";
-                    return prev;
             }
 
-            return false;
+            throw new Error(`Unknown token ${cur}`);
         })
     );
 };
@@ -76,5 +72,17 @@ const applyOp = (op: string, literal: boolean, previousLiteral: string | boolean
     } else if (op === "NOT") {
         return !literal;
     }
-    return false;
+    throw new Error(`Unknown operation ${op}`);
 };
+function processParenthesis(expression: string): string {
+    Array.from(expression.matchAll(/\(.*\)/g)).forEach(match => {
+        const matchString = match[0];
+        const matchIndex = expression.indexOf(matchString);
+        const matchLength = matchString.length;
+        const subExpression = expression.substring(matchIndex + 1, matchIndex + matchLength - 1);
+        expression =
+            expression.slice(0, matchIndex) + (parseExpression(subExpression) ? "TRUE" : "FALSE") + expression.slice(matchIndex + matchLength);
+    });
+
+    return expression;
+}
