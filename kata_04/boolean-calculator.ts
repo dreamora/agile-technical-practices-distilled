@@ -10,15 +10,11 @@ const isLiteral = (expression: string): expression is "TRUE" | "FALSE" => {
 };
 
 const parseLiteral = (literal: string | boolean): boolean => {
-    if (typeof literal === "boolean") {
-        return literal;
-    }
-    return literal === "TRUE";
+    return typeof literal === "boolean" ? literal : literal === "TRUE";
 };
 
 const parseExpression = (expression: string): boolean => {
-    expression = processParenthesis(expression);
-    return expression
+    return processParenthesis(expression)
         .split(" OR ")
         .map(cur => parseSubExpression(cur))
         .reduce((prev, cur) => {
@@ -39,14 +35,14 @@ const parseSubExpression = (expression: string): boolean => {
             switch (curToken) {
                 case "TRUE":
                     if (currentOp !== "") {
-                        const res = applyOp(currentOp, true, prev);
+                        const res = applyOperation(currentOp, true, prev);
                         currentOp = "";
                         return res;
                     }
                     break;
                 case "FALSE":
                     if (currentOp !== "") {
-                        const res = applyOp(currentOp, false, prev);
+                        const res = applyOperation(currentOp, false, prev);
                         currentOp = "";
                         return res;
                     }
@@ -64,7 +60,7 @@ const parseSubExpression = (expression: string): boolean => {
     );
 };
 
-const applyOp = (op: string, literal: boolean, previousLiteral: string | boolean): boolean => {
+const applyOperation = (op: string, literal: boolean, previousLiteral: string | boolean): boolean => {
     if (op === "AND") {
         return literal && parseLiteral(previousLiteral);
     } else if (op === "OR") {
@@ -74,6 +70,13 @@ const applyOp = (op: string, literal: boolean, previousLiteral: string | boolean
     }
     throw new Error(`Unknown operation ${op}`);
 };
+
+/**
+ * Processes an expression and removes all parenthesis
+ *
+ * @param expression The expression to process
+ * @returns The updated expression where parenthesis have been replaced with the resulting boolean.
+ */
 function processParenthesis(expression: string): string {
     Array.from(expression.matchAll(/\(.*\)/g)).forEach(match => {
         const matchString = match[0];
